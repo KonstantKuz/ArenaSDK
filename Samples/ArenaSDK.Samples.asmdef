@@ -1,0 +1,16 @@
+{
+    "name": "ArenaSDK.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e8b63ea045e893f45b016f1e4d7d55e1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

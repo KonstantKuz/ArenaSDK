@@ -1,0 +1,9 @@
+﻿{
+  "name": "com.arenavs.sdk",
+  "version": "1.0.0",
+  "displayName": "ArenaSDK",
+  "documentationUrl": "https://api.arenavs.com/redocs/gamedev/v2",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json" : "3.2.1"
+  }
+}
