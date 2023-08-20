@@ -20,7 +20,7 @@ public class ArenaSDKManager : MonoBehaviour
     [SerializeField] private string _serverToken = "";
     [SerializeField] private int _maxUserLoadAttemptCount = 10;
 
-    private CompositeDisposable _disposable = new();
+    private CompositeDisposable _disposable = new CompositeDisposable();
     private ArenaUserRepository _userRepository;
     
     private static ArenaSDKManager _instance;

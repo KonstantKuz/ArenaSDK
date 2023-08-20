@@ -5,7 +5,7 @@ namespace Util
 {
     public class CompositeDisposable : IDisposable
     {
-        private List<IDisposable> _disposables = new();
+        private List<IDisposable> _disposables = new List<IDisposable>();
         public void Add(IDisposable disposable) => _disposables.Add(disposable);
         public void Dispose()
         {

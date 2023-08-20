@@ -10,7 +10,7 @@ namespace Response.Fail
 
         public static UnityWebRequestFail CreateFromRequest(UnityWebRequest request)
         {
-            return new() {message = request.error};
+            return new UnityWebRequestFail {message = request.error};
         }
 
         public string Message => message;
