@@ -5,7 +5,7 @@ using Response;
 namespace LeaderBoard.ResponseForm
 {
     [Serializable]
-    public class GetLeaderBoardSuccess : IResponse
+    public class LeaderBoards : IResponse
     {
         public List<LeaderBoardItem> leaderboards;
         public List<LeaderBoardItem> aroundLeaderboards;

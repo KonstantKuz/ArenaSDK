@@ -47,7 +47,7 @@ namespace LeaderBoard
                 Body.SetRequestHeader("Content-Type", "application/json");
                 Body.SetRequestHeader("access-token", _accessToken);
                 yield return Body.SendWebRequest();
-                Result = this.GetResponse<GetLeaderBoardSuccess>();
+                Result = this.GetResponse<LeaderBoards>();
             }
         }
     }

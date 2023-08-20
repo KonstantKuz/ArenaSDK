@@ -39,11 +39,6 @@ namespace Request
                 fail = UnityWebRequestFail.CreateFromRequest(request.Body);
                 return true;
             }
-            if (request.Body.downloadHandler.text.IsNullOrEmpty())
-            {
-                fail = new UnexpectedFail();
-                return true;
-            }
 
             var serverFail = JsonUtility.FromJson<ServerFail>(request.Body.downloadHandler.text);
             if (!serverFail.IsEmpty())

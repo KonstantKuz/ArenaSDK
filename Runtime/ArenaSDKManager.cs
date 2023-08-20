@@ -27,9 +27,14 @@ public class ArenaSDKManager : MonoBehaviour
     public static ArenaSDKManager Instance => _instance ??= Init();
 
     [CanBeNull]
-    public UserInfo UserInfo => _userRepository.Info;
+    public static UserInfo UserInfo => Instance._userRepository.Info;
+    public static AuthorizationTokens Tokens => ArenaTokenRepository.LoadTokens();
     
     public event Action<IFailResponse> OnAccessTokenUpdateFailed;
+    
+    /// <summary>
+    /// Possible response : UserInfoLoadFail, UnityWebRequestFail, ServerFail
+    /// </summary>
     public event Action<IFailResponse> OnUserInfoLoadFailed;
 
     private static ArenaSDKManager Init()
@@ -44,24 +49,45 @@ public class ArenaSDKManager : MonoBehaviour
         return instance;
     }
 
+    /// <summary>
+    /// User registration
+    /// </summary>
+    /// <param name="username">Min characters : 3 Max characters : 20 Valid characters : a-z, A-Z, 0-9</param>
+    /// <param name="password">Min characters : 8</param>
+    /// <param name="callback">Possible responses : UserInfo (success), InvalidFormFail (invalid parameters provided), UnityWebRequestFail, ServerFail</param>
     public void RegisterUser(string email, string username, string password, Action<IResponse> callback)
     {
         var request = new UserRegistrationRequest(email, username, password);
         StartCoroutine(SendRequest(request, callback));
     }
 
+    /// <summary>
+    /// Send confirmation code to user's email
+    /// </summary>
+    /// <param name="callback">Possible responses : OperationSuccess (success), UnityWebRequestFail, ServerFail</param>
     public void SendConfirmationCode(string email, Action<IResponse> callback)
     {
         var request = new SendCodeRequest(email);
         StartCoroutine(SendRequest(request, callback));
     }
 
+    /// <summary>
+    /// Try to confirm user's code
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="callback">Possible responses : OperationSuccess (success), UnityWebRequestFail, ServerFail</param>
     public void ConfirmEmail(string email, string code, Action<IResponse> callback)
     {
         var request = new EmailConfirmationRequest(email, code);
         StartCoroutine(SendRequest(request, callback));
     }
 
+    /// <summary>
+    /// User authorization
+    /// </summary>
+    /// <param name="userNameOrEmail">Min characters : 1</param>
+    /// <param name="password">Min characters : 8 Max characters : 100</param>
+    /// <param name="callback">Possible responses : AuthorizationTokens (success), InvalidFormFail (invalid parameters provided), UnityWebRequestFail, ServerFail</param>
     public void AuthorizeUser(string userNameOrEmail, string password, Action<IResponse> callback)
     {
         var request = new AuthorizationRequest(userNameOrEmail, password);
@@ -73,6 +99,10 @@ public class ArenaSDKManager : MonoBehaviour
         StartCoroutine(SendRequest(request, onResponseReceived));
     }
 
+    /// <summary>
+    /// Load UserInfo
+    /// </summary>
+    /// <param name="callback">Possible responses : UserInfo (success), UnityWebRequestFail, ServerFail</param>
     public void LoadUserInfo(Action<IResponse> callback)
     {
         var token = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
@@ -80,23 +110,51 @@ public class ArenaSDKManager : MonoBehaviour
         StartCoroutine(SendRequest(request, callback));
     }
 
-    public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback)
+    /// <summary>
+    /// Load leaderboards
+    /// </summary>
+    /// <param name="leaderboardAlias"></param>
+    /// <param name="limit">The maximum number of items to be returned in a single response. For instance, if the limit is set to 10, then the API will return the first 10 items that match the query.</param>
+    /// <param name="offset">Indicates where to start fetching the data. For example, if the offset is set to 20, then the API will skip the first 20 items that match the query and start fetching from the 21st item.</param>
+    /// <param name="callback">Possible responses : LeaderBoards (success), InvalidFormFail (invalid parameters provided), UnityWebRequestFail, ServerFail</param>
+    public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback, int limit = 10, int offset = 0)
     {
         var token = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
-        var request = new GetLeaderBoardRequest(leaderboardAlias, token);
+        var request = new GetLeaderBoardRequest(leaderboardAlias, token, limit, offset);
         StartCoroutine(SendRequest(request, callback));
     }
 
+    /// <summary>
+    /// Send user's new score
+    /// </summary>
+    /// <param name="callback">Possible responses : LeaderBoards (success), UserInfoLoadFail, UnityWebRequestFail, ServerFail</param>
     public void UpdateUserStatistics(string leaderboardAlias, int value, Action<IResponse> callback)
     {
-        if (_userRepository.Info == null)
+        if (UserInfo == null)
         {
             callback?.Invoke(new UserInfoLoadFail());
             return;
         }
 
-        var request = new PatchLeaderBoardRequest(leaderboardAlias, _serverToken, _userRepository.Info.id, value);
+        var request = new PatchLeaderBoardRequest(leaderboardAlias, _serverToken, UserInfo.id, value);
         StartCoroutine(SendRequest(request, callback));
+    }
+
+    /// <summary>
+    /// Manually request new access token
+    /// </summary>
+    /// <param name="callback">Possible responses : RefreshTokenSuccess (success), UnityWebRequestFail, ServerFail</param>
+    public void UpdateAccessToken(Action<IResponse> callback)
+    {
+        var refreshToken = ArenaTokenRepository.LoadToken(TokenType.RefreshToken);
+        var request = new RefreshTokenRequest(refreshToken.token);
+        Action<IResponse> onResponseReceived = response =>
+        {
+            callback?.Invoke(response);
+            if(response is not RefreshTokenSuccess success) return;
+            ArenaTokenRepository.SaveToken(TokenType.AccessToken, success.accessToken);
+        };
+        StartCoroutine(SendRequest(request, onResponseReceived));
     }
 
     private void OnAuthorizationResponse(IResponse response)

@@ -33,7 +33,7 @@ namespace Samples.Scripts
         {
             switch (response)
             {
-                case GetLeaderBoardSuccess success:
+                case LeaderBoards success:
                     _leaderBoardWindow.UpdateView(success.leaderboards);
                     SavePlayerScore(success.leaderboards);
                     break;
@@ -45,7 +45,7 @@ namespace Samples.Scripts
 
         private void SavePlayerScore(List<LeaderBoardItem> items)
         {
-            var playerInfo = ArenaSDKManager.Instance.UserInfo;
+            var playerInfo = ArenaSDKManager.UserInfo;
             _playerScore = items.Count == 0 ? new LeaderBoardItem() : items.First(it => it.profileId == playerInfo.id);
         }
 

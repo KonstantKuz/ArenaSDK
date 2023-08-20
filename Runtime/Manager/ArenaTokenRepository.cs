@@ -13,6 +13,15 @@ namespace Manager
             SaveToken(TokenType.AccessToken, tokens.accessToken);
             SaveToken(TokenType.RefreshToken, tokens.refreshToken);
         }
+
+        internal static AuthorizationTokens LoadTokens()
+        {
+            return new AuthorizationTokens
+            {
+                accessToken = LoadToken(TokenType.AccessToken),
+                refreshToken = LoadToken(TokenType.RefreshToken),
+            };
+        }
         
         internal static bool IsValid(TokenType tokenType)
         {
