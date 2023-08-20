@@ -15,9 +15,7 @@ namespace Samples.Scripts
         [SerializeField] private LeaderBoardWindow _leaderBoardWindow;
         [SerializeField] private MessagePopup _messagePopup;
 
-        private List<LeaderBoardItem> _leaderBoard;
-        [CanBeNull]
-        private LeaderBoardItem _playerScore;
+        private LeaderBoardItem _playerScore = new LeaderBoardItem();
         
         private int _value;
         
@@ -48,18 +46,11 @@ namespace Samples.Scripts
         private void SavePlayerScore(List<LeaderBoardItem> items)
         {
             var playerInfo = ArenaSDKManager.Instance.UserInfo;
-            if (playerInfo == null)
-            {
-                _messagePopup.Show("User info not loaded. ");
-                return;
-            }
-
             _playerScore = items.Count == 0 ? new LeaderBoardItem() : items.First(it => it.profileId == playerInfo.id);
         }
 
         private void AddScore()
         {
-            if (_playerScore == null) return;
             _playerScore.score++;
             ArenaSDKManager.Instance.UpdateUserStatistics(_leaderboardAlias, _playerScore.score, AddScoreCallback);
         }

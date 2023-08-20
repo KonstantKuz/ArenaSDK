@@ -28,30 +28,31 @@ namespace Request
         
         public static IResponse GetResponse<TSuccessResponse>(this IRequest request) where TSuccessResponse : IResponse
         {
-            return request.TryGetResponse<TSuccessResponse>(out var success) ? success : request.GetFailResponse();
+            return request.TryGetFailResponse(out var fail) ? fail : JsonUtility.FromJson<TSuccessResponse>(request.Body.downloadHandler.text);
         }
         
-        public static bool TryGetResponse<T>(this IRequest request, out T response) where T : IResponse
+        public static bool TryGetFailResponse(this IRequest request, out IFailResponse fail)
         {
-            response = default;
-            var responseValue = request.Body.downloadHandler.text;
-            if (responseValue.IsNullOrEmpty()) return false;
-            response = JsonUtility.FromJson<T>(responseValue);
-            return true;
-        }
-        
-        public static IResponse GetFailResponse(this IRequest request)
-        {
+            fail = null;
             if (!request.Body.error.IsNullOrEmpty())
             {
-                return UnityWebRequestFail.CreateFromRequest(request.Body);
+                fail = UnityWebRequestFail.CreateFromRequest(request.Body);
+                return true;
             }
             if (request.Body.downloadHandler.text.IsNullOrEmpty())
             {
-                return new UnexpectedFail();
+                fail = new UnexpectedFail();
+                return true;
+            }
+
+            var serverFail = JsonUtility.FromJson<ServerFail>(request.Body.downloadHandler.text);
+            if (!serverFail.IsEmpty())
+            {
+                fail = serverFail;
+                return true;
             }
             
-            return JsonUtility.FromJson<ServerFail>(request.Body.downloadHandler.text);
+            return false;
         }
     }
 }

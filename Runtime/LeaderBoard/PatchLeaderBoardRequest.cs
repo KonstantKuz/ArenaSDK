@@ -25,7 +25,7 @@ namespace LeaderBoard
         
         public IEnumerator Send()
         {
-            using (Body = new UnityWebRequest(API.GET_LEADERBOARD(_leaderboardAlias), RequestMethod.PATCH)
+            using (Body = new UnityWebRequest(API.PATCH_LEADERBOARD(_leaderboardAlias), RequestMethod.PATCH)
             {
                 uploadHandler = new UploadHandlerRaw(_patchLeaderboardForm.ToBytes()),
                 downloadHandler = new DownloadHandlerBuffer()
