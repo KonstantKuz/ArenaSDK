@@ -35,14 +35,14 @@ Use this function during registration process to validate code that was sent to 
 - ####ArenaSDKManager.Instance.AuthorizeUser
 Use this function to authorize user.
 
-- ####ArenaSDKManager.Instance.LoadUserInfo
-Manually load UserInfo
-
 - ####ArenaSDKManager.Instance.LoadLeaderBoard
 Load game's leaderboard using leaderboard alias.
 
 - ####ArenaSDKManager.Instance.UpdateUserStatistics
-Udpate user's scores on different leaderboards.
+Update user's scores on different leaderboards.
 
-- ####ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.
-Manually request access token
+- ####ArenaSDKManager.Instance.LoadUserInfo
+Manually load UserInfo. You can use this function when ArenaSDKManager.Instance.OnUserInfoLoadFailed is fired.
+
+- ####ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.UpdateAccessToken
+Manually request access token. You can use this function when ArenaSDKManager.Instance.OnAccessTokenUpdateFailed is fired.

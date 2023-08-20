@@ -22,18 +22,18 @@ namespace Tests.Runtime
         }
 
         [UnityTest]
-        public IEnumerator AuthorizationRequest_WillHaveServerFail()
+        public IEnumerator AuthorizationRequest_WillHaveUnityWebRequestFail()
         {
-            var nonexistentLogin = new StringBuilder("nonexistentLogin");
-            for (int i = 0; i < 5; i++)
+            var nonexistentLogin = new StringBuilder("nonexistent");
+            for (int i = 0; i < 3; i++)
             {
                 nonexistentLogin.Append(Random.Range(0, 20).ToString());
             }
 
             var request = new AuthorizationRequest(nonexistentLogin.ToString(), nonexistentLogin.ToString());
             yield return request.Send();
-            Debug.Log($"Request result : {(request.Result as ServerFail)?.Message}");
-            Assert.IsTrue(request.Result is ServerFail);
+            Debug.Log($"Request result : {(request.Result as UnityWebRequestFail)?.Message}");
+            Assert.IsTrue(request.Result is UnityWebRequestFail);
         }
     }
 }
