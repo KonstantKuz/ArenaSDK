@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace Samples.Scripts
 {
-    public class SampleRegistration : MonoBehaviour
+    public class RegistrationSample : MonoBehaviour
     {
         [SerializeField] private RegistrationWindow _registrationWindow;
         [SerializeField] private ConfirmationWindow _emailConfirmationWindow;
         [SerializeField] private MessagePopup _messagePopup;
-        [SerializeField] private SampleAuthorization _authorization;
+        [SerializeField] private AuthorizationSample _authorization;
         
         public void Awake()
         {

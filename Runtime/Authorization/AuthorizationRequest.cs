@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Request;
-using Response.Fail;
 using UnityEngine.Networking;
 
 namespace Authorization
@@ -19,12 +18,12 @@ namespace Authorization
         
         public IEnumerator Send()
         {
-            if (!_authorizationForm.IsValid(out var description))
+            if (!this.IsFormValid(_authorizationForm, out var fail))
             {
-                Result = new InvalidFormFail(description);
+                Result = fail;
                 yield break;
             }
-            
+
             using (Body = new UnityWebRequest(API.AUTHORIZATION, RequestMethod.POST)
             {
                 uploadHandler = new UploadHandlerRaw(_authorizationForm.ToBytes()),

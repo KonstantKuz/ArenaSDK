@@ -16,7 +16,7 @@ namespace LeaderBoard
         public object Result { get; private set;  }
 
         public GetLeaderBoardRequest(string leaderboardAlias, JWTTokenResponse accessToken,
-            int limit, int offset,
+            int limit = 10, int offset = 0,
             int aroundPlayerLimit = 10, bool isAroundPlayer = true)
         {
             _leaderboardAlias = leaderboardAlias;
@@ -32,12 +32,13 @@ namespace LeaderBoard
         
         public IEnumerator Send()
         {
-            if (!_getLeaderboardForm.IsValid(out var description))
+            if (!this.IsFormValid(_getLeaderboardForm, out var fail))
             {
-                
+                Result = fail;
+                yield break;
             }
 
-            using (Body = new UnityWebRequest(API.REFRESH, RequestMethod.POST)
+            using (Body = new UnityWebRequest(API.GET_LEADERBOARD(_leaderboardAlias), RequestMethod.GET)
             {
                 uploadHandler = new UploadHandlerRaw(_getLeaderboardForm.ToBytes()),
                 downloadHandler = new DownloadHandlerBuffer()

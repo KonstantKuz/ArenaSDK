@@ -2,7 +2,6 @@ using System.Collections;
 using Registration.RequestForm;
 using Registration.ResponseForm;
 using Request;
-using Response.Fail;
 using UnityEngine.Networking;
 
 namespace Registration
@@ -21,9 +20,9 @@ namespace Registration
 
         public IEnumerator Send()
         {
-            if (!_registrationForm.IsValid(out var description))
+            if (!this.IsFormValid(_registrationForm, out var fail))
             {
-                Result = new InvalidFormFail(description);
+                Result = fail;
                 yield break;
             }
 

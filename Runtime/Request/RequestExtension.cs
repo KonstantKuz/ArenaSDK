@@ -2,6 +2,7 @@
 using Response;
 using Response.Fail;
 using UnityEngine;
+using Util;
 
 namespace Request
 {
@@ -13,7 +14,7 @@ namespace Request
             return Encoding.UTF8.GetBytes(jsonForm);
         }
 
-        public static bool IsFormValid(IValidatedForm form, out IFailResponse fail)
+        public static bool IsFormValid(this IRequest request, IValidatedForm form, out IFailResponse fail)
         {
             fail = null;
             if (form.IsValid(out var description))

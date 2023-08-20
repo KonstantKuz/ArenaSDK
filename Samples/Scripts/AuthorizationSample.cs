@@ -1,18 +1,14 @@
-﻿using System;
-using Authorization;
+﻿using Authorization;
 using Response;
 using Response.Fail;
 using UnityEngine;
 
 namespace Samples.Scripts
 {
-    public class SampleAuthorization : MonoBehaviour
+    public class AuthorizationSample : MonoBehaviour
     {
         [SerializeField] private AuthorizationWindow _authorizationWindow;
         [SerializeField] private MessagePopup _messagePopup;
-        
-        public JWTTokenResponse AccessToken { get; private set; }
-        public JWTTokenResponse RefreshToken { get; private set; }
 
         private void Awake()
         {
@@ -31,7 +27,7 @@ namespace Samples.Scripts
 
         public void Authorize(string username, string password)
         {
-            ArenaSDKManager.Instance.AuthorizeUser(username, password, AuthorizationCallback, UpdateTokenCallback);
+            ArenaSDKManager.Instance.AuthorizeUser(username, password, AuthorizationCallback);
         }
 
         private void AuthorizationCallback(IResponse response)
@@ -39,19 +35,12 @@ namespace Samples.Scripts
             switch (response)
             {
                 case AuthorizationSuccess success:
-                    RefreshToken = success.refreshToken;
-                    AccessToken = success.accessToken;
                     _messagePopup.Show("Authorization success!");
                     break;
                 case IFailResponse fail:
                     _messagePopup.Show(fail.Message);
                     break;
             }
-        }
-
-        private void UpdateTokenCallback(JWTTokenResponse token)
-        {
-            AccessToken = token;
         }
     }
 }
