@@ -26,23 +26,23 @@ If registration process will fail IResponse object will be of type IFailResponse
 
 Samples of handling different responses are available in samples folder.
 
-- ####ArenaSDKManager.Instance.SendConfirmationCode
+- #### ArenaSDKManager.Instance.SendConfirmationCode
 After registration proccess confirmation code will be sent automatically. But you can request confirmation code again.
 
-- ####ArenaSDKManager.Instance.ConfirmEmail
+- #### ArenaSDKManager.Instance.ConfirmEmail
 Use this function during registration process to validate code that was sent to user's email. 
 
-- ####ArenaSDKManager.Instance.AuthorizeUser
+- #### ArenaSDKManager.Instance.AuthorizeUser
 Use this function to authorize user.
 
-- ####ArenaSDKManager.Instance.LoadLeaderBoard
+- #### ArenaSDKManager.Instance.LoadLeaderBoard
 Load game's leaderboard using leaderboard alias.
 
-- ####ArenaSDKManager.Instance.UpdateUserStatistics
+- #### ArenaSDKManager.Instance.UpdateUserStatistics
 Update user's scores on different leaderboards.
 
-- ####ArenaSDKManager.Instance.LoadUserInfo
+- #### ArenaSDKManager.Instance.LoadUserInfo
 Manually load UserInfo. You can use this function when ArenaSDKManager.Instance.OnUserInfoLoadFailed is fired.
 
-- ####ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.UpdateAccessToken
+- #### ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.UpdateAccessToken
 Manually request access token. You can use this function when ArenaSDKManager.Instance.OnAccessTokenUpdateFailed is fired.
