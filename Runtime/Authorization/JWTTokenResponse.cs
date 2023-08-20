@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Authorization
 {
@@ -8,10 +7,5 @@ namespace Authorization
     {
         public int expiresIn;
         public string token;
-
-        public override string ToString()
-        {
-            return JsonUtility.ToJson(this);
-        }
     }
 }

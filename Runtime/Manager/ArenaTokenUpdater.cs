@@ -48,6 +48,7 @@ namespace Manager
             switch (request.Result)
             {
                 case RefreshTokenSuccess success:
+                    ArenaTokenRepository.SaveToken(TokenType.AccessToken, success.accessToken);
                     _runner.StartCoroutine(AutoUpdateAccessToken());
                     break;
                 case IFailResponse fail:

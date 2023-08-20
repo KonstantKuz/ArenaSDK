@@ -14,6 +14,13 @@ namespace Samples.Scripts
         private void Awake()
         {
             _authorizationWindow.Confirm.onClick.AddListener(OnAuthorizationConfirm);
+            ArenaSDKManager.Instance.OnTokenUpdateFail += SignInAgain;
+        }
+
+        private void SignInAgain(IFailResponse response)
+        {
+            _messagePopup.Show(response.Message);
+            _authorizationWindow.gameObject.SetActive(true);
         }
 
         private void OnAuthorizationConfirm()

@@ -61,7 +61,7 @@ public class ArenaSDKManager : MonoBehaviour
 
     public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback)
     {
-        var request = new GetLeaderBoardRequest(leaderboardAlias, ArenaTokenRepository.LoadToken(TokenType.AccessToken));
+        var request = new GetLeaderBoardRequest(leaderboardAlias, ArenaTokenRepository.LoadToken(TokenType.AccessToken).token);
         StartCoroutine(SendRequest(request, callback));
     }
 
