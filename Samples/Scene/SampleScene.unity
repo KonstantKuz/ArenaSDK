@@ -1096,7 +1096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &771567656
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1363,6 +1363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _authorizationWindow: {fileID: 1614555507}
   _messagePopup: {fileID: 1885160090}
+  _leaderBoardSample: {fileID: 771567657}
 --- !u!1 &876308360
 GameObject:
   m_ObjectHideFlags: 0

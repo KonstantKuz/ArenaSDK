@@ -9,6 +9,7 @@ namespace Samples.Scripts
     {
         [SerializeField] private AuthorizationWindow _authorizationWindow;
         [SerializeField] private MessagePopup _messagePopup;
+        [SerializeField] private LeaderBoardSample _leaderBoardSample;
 
         private void Awake()
         {
@@ -36,6 +37,8 @@ namespace Samples.Scripts
             {
                 case AuthorizationSuccess success:
                     _messagePopup.Show("Authorization success!");
+                    gameObject.SetActive(false);
+                    _leaderBoardSample.gameObject.SetActive(true);
                     break;
                 case IFailResponse fail:
                     _messagePopup.Show(fail.Message);
