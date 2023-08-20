@@ -10,11 +10,11 @@ Fill up your game alias and server access token fields.
 
 - MaxUserLoginAttemptCount  
 In order to avoid manual updating tokens ArenaSDKManager will update access token automatically every time it becomes expired.  
-If you need to get or update tokens manually you can use UpdateAccessTokenFunction
+If you need to get or update tokens manually you can use UpdateAccessToken function.
 
 ArenaSDKManager is a singleton and you can access it using ArenaSDKManager.Instance property.
 
-- ####ArenaSDKManager.Instance.RegisterUser  
+- #### ArenaSDKManager.Instance.RegisterUser  
 To register new user use ArenaSDKManager.Instance.RegisterUser function.  
 After calling this function you have to handle callback which will contain IResponse object.  
 All possible unique IResponse object types are described in method info. All functions could return common fail responses such as UnityWebRequestFail or ServerFail.  
@@ -44,5 +44,5 @@ Update user's scores on different leaderboards.
 - #### ArenaSDKManager.Instance.LoadUserInfo
 Manually load UserInfo. You can use this function when ArenaSDKManager.Instance.OnUserInfoLoadFailed is fired.
 
-- #### ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.UpdateAccessToken
+- #### ArenaSDKManager.Instance.UpdateAccessToken
 Manually request access token. You can use this function when ArenaSDKManager.Instance.OnAccessTokenUpdateFailed is fired.
