@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Registration.RequestForm;
-using Registration.ResponseForm;
 using Request;
 using Response;
 using UnityEngine.Networking;
@@ -29,7 +28,7 @@ namespace Registration
             {
                 Body.SetRequestHeader("Content-Type", "application/json");
                 yield return Body.SendWebRequest();
-                Result = this.GetResponse<EmailConfirmationSuccess>();
+                Result = this.GetResponse<OperationSuccess>();
             }
         }
     }

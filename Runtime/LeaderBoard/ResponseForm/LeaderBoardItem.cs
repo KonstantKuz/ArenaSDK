@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeaderBoard
+namespace LeaderBoard.ResponseForm
 {
     [Serializable]
     public class LeaderBoardItem

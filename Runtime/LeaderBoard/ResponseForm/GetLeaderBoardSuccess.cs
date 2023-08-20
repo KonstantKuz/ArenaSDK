@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Response;
 
-namespace LeaderBoard
+namespace LeaderBoard.ResponseForm
 {
     [Serializable]
     public class GetLeaderBoardSuccess : IResponse

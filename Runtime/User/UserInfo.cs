@@ -1,11 +1,10 @@
 ﻿using System;
 using Response;
-using UnityEngine;
 
-namespace Registration.ResponseForm
+namespace User
 {
     [Serializable]
-    public class UserRegistrationSuccess : IResponse
+    public class UserInfo : IResponse
     {
         public string id;
         public string username;
@@ -19,11 +18,6 @@ namespace Registration.ResponseForm
             public string playfabId;
             public string token;
             public int tokenExpired;
-        }
-
-        public override string ToString()
-        {
-            return JsonUtility.ToJson(this);
         }
     }
 }

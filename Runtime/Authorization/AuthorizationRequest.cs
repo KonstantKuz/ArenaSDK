@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using Authorization.RequestForm;
+using Authorization.ResponseForm;
 using Request;
 using UnityEngine.Networking;
 
@@ -32,7 +34,7 @@ namespace Authorization
             {
                 Body.SetRequestHeader("Content-Type", "application/json");
                 yield return Body.SendWebRequest();
-                Result = this.GetResponse<AuthorizationSuccess>();
+                Result = this.GetResponse<AuthorizationTokens>();
             }
         }
     }

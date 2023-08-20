@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using LeaderBoard.RequestForm;
+using LeaderBoard.ResponseForm;
 using Request;
 using UnityEngine.Networking;
 

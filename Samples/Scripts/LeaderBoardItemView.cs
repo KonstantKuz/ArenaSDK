@@ -1,4 +1,5 @@
 ﻿using LeaderBoard;
+using LeaderBoard.ResponseForm;
 using UnityEngine;
 using UnityEngine.UI;
 

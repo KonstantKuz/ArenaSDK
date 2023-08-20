@@ -10,6 +10,6 @@ namespace Response.Fail
         public string type;
         public string message;
         
-        public string Message => message;
+        public string Message => $"Server fail: id = {id}, code = {code}, type = {type}, message = {message}";
     }
 }

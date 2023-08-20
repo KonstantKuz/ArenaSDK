@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using LeaderBoard;
+using LeaderBoard.ResponseForm;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +11,18 @@ namespace Samples.Scripts
     {
         [SerializeField] private Transform _elementRoot;
         [SerializeField] private LeaderBoardItemView _itemViewPrefab;
-        [field:SerializeField] public Button LoadButton { get; private set; }
+        [SerializeField] private Button _loadButton;
+        [SerializeField] private Button _addScoreButton;
 
-        public void Init(List<LeaderBoardItem> items)
+        public void SetCallbacks(Action loadCallback, Action addScoreCallback)
+        {
+            _loadButton.onClick.RemoveAllListeners();
+            _loadButton.onClick.AddListener(() => loadCallback?.Invoke());
+            _addScoreButton.onClick.RemoveAllListeners();
+            _addScoreButton.onClick.AddListener(() => addScoreCallback?.Invoke());
+        }
+        
+        public void UpdateView(List<LeaderBoardItem> items)
         {
             Clear();
             foreach (var leaderBoardItem in items.OrderBy(it => it.position))

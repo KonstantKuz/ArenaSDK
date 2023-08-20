@@ -1,7 +1,7 @@
-using Registration.ResponseForm;
 using Response;
 using Response.Fail;
 using UnityEngine;
+using User;
 
 namespace Samples.Scripts
 {
@@ -29,7 +29,7 @@ namespace Samples.Scripts
         {
             switch (response)
             {
-                case UserRegistrationSuccess success:
+                case UserInfo success:
                     ProceedToConfirmation();
                     break;
                 case IFailResponse fail:
@@ -68,7 +68,7 @@ namespace Samples.Scripts
         {
             switch (response)
             {
-                case EmailConfirmationSuccess success:
+                case OperationSuccess success:
                     _authorization.ProceedToLogin(_registrationWindow.UserName.text, _registrationWindow.Password.text);
                     gameObject.SetActive(false);
                     break;

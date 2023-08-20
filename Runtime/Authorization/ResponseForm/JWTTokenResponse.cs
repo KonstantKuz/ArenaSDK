@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Authorization
+namespace Authorization.ResponseForm
 {
     [Serializable]
     public class JWTTokenResponse

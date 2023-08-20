@@ -2,7 +2,7 @@
 using Response;
 using Util;
 
-namespace Authorization
+namespace Authorization.RequestForm
 {
     [Serializable]
     public class AuthorizationForm : IValidatedForm

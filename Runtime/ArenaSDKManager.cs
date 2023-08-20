@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using Authorization;
+using Authorization.ResponseForm;
+using JetBrains.Annotations;
 using LeaderBoard;
 using Manager;
 using Registration;
@@ -9,23 +11,37 @@ using Response;
 using Response.Fail;
 using UnityEngine;
 using UnityEngine.Assertions;
+using User;
 using Util;
 
 public class ArenaSDKManager : MonoBehaviour
 {
     [SerializeField] private string _gameAlias = "FIGHTER";
+    [SerializeField] private string _serverToken = "";
+    [SerializeField] private int _maxUserLoadAttemptCount = 10;
 
     private CompositeDisposable _disposable = new();
+    private ArenaUserRepository _userRepository;
     
-    public static ArenaSDKManager Instance { get; private set; }
-    public event Action<IFailResponse> OnTokenUpdateFail;
+    private static ArenaSDKManager _instance;
+    public static ArenaSDKManager Instance => _instance ??= Init();
 
-    public void Awake()
+    [CanBeNull]
+    public UserInfo UserInfo => _userRepository.Info;
+    
+    public event Action<IFailResponse> OnAccessTokenUpdateFailed;
+    public event Action<IFailResponse> OnUserInfoLoadFailed;
+
+    private static ArenaSDKManager Init()
     {
-        Instance = this;
-        DontDestroyOnLoad(this);
-        GameData.ALIAS = _gameAlias;
-        Assert.IsTrue(_gameAlias != null && !_gameAlias.Equals(string.Empty), "Game alias is empty.");
+        var managers = FindObjectsOfType<ArenaSDKManager>();
+        if (managers.Length == 0) throw new NullReferenceException("ArenaSDKManager not found.");
+        if (managers.Length > 1) throw new Exception("There are more than one instances of ArenaSDKManager.");
+        var instance = managers[0];
+        Assert.IsTrue(instance._gameAlias != null && !instance._gameAlias.Equals(string.Empty), "Game alias is empty.");
+        GameData.ALIAS = instance._gameAlias;
+        DontDestroyOnLoad(instance);
+        return instance;
     }
 
     public void RegisterUser(string email, string username, string password, Action<IResponse> callback)
@@ -51,18 +67,47 @@ public class ArenaSDKManager : MonoBehaviour
         var request = new AuthorizationRequest(userNameOrEmail, password);
         Action<IResponse> onResponseReceived = response =>
         {
-            ArenaTokenRepository.TrySaveTokens(response);
-            ArenaTokenUpdater.TryRunAutoUpdate(response, this, it => OnTokenUpdateFail?.Invoke(it))
-                .AddTo(_disposable);
+            OnAuthorizationResponse(response);
             callback?.Invoke(response);
         };
         StartCoroutine(SendRequest(request, onResponseReceived));
     }
 
+    public void LoadUserInfo(Action<IResponse> callback)
+    {
+        var token = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
+        var request = new GetUserInfoRequest(token);
+        StartCoroutine(SendRequest(request, callback));
+    }
+
     public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback)
     {
-        var request = new GetLeaderBoardRequest(leaderboardAlias, ArenaTokenRepository.LoadToken(TokenType.AccessToken).token);
+        var token = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
+        var request = new GetLeaderBoardRequest(leaderboardAlias, token);
         StartCoroutine(SendRequest(request, callback));
+    }
+
+    public void UpdateUserStatistics(string leaderboardAlias, int value, Action<IResponse> callback)
+    {
+        if (_userRepository.Info == null)
+        {
+            callback?.Invoke(new UserInfoLoadFail());
+            return;
+        }
+
+        var request = new PatchLeaderBoardRequest(leaderboardAlias, _serverToken, _userRepository.Info.id, value);
+        StartCoroutine(SendRequest(request, callback));
+    }
+
+    private void OnAuthorizationResponse(IResponse response)
+    {
+        if(response is IFailResponse) return;
+        var success = response as AuthorizationTokens;
+        ArenaTokenRepository.SaveTokens(success);
+        ArenaTokenUpdater.RunAutoUpdate(this, OnAccessTokenUpdateFailed)
+            .AddTo(_disposable);
+        _userRepository = new ArenaUserRepository(this, _maxUserLoadAttemptCount, OnUserInfoLoadFailed);
+        _userRepository.AddTo(_disposable);
     }
 
     private IEnumerator SendRequest(IRequest request, Action<IResponse> callback)

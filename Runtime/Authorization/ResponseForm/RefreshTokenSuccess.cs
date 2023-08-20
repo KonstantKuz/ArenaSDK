@@ -1,7 +1,7 @@
 ﻿using System;
 using Response;
 
-namespace Authorization
+namespace Authorization.ResponseForm
 {
     [Serializable]
     public class RefreshTokenSuccess : IResponse

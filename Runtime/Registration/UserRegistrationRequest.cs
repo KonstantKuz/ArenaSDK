@@ -1,8 +1,8 @@
 using System.Collections;
 using Registration.RequestForm;
-using Registration.ResponseForm;
 using Request;
 using UnityEngine.Networking;
+using User;
 
 namespace Registration
 {
@@ -34,7 +34,7 @@ namespace Registration
             {
                 Body.SetRequestHeader("Content-Type", "application/json");
                 yield return Body.SendWebRequest();
-                Result = this.GetResponse<UserRegistrationSuccess>();
+                Result = this.GetResponse<UserInfo>();
             }
         }
     }

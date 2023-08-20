@@ -44,7 +44,7 @@ namespace Request
         {
             if (!request.Body.error.IsNullOrEmpty())
             {
-                return UnityFail.CreateFromRequest(request.Body);
+                return UnityWebRequestFail.CreateFromRequest(request.Body);
             }
             if (request.Body.downloadHandler.text.IsNullOrEmpty())
             {

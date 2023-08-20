@@ -2,7 +2,7 @@
 using Response;
 using Util;
 
-namespace LeaderBoard
+namespace LeaderBoard.RequestForm
 {
     [Serializable]
     public class GetLeaderboardForm : IValidatedForm

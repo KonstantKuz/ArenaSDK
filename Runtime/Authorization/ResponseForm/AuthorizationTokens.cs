@@ -1,10 +1,10 @@
 ﻿using System;
 using Response;
 
-namespace Authorization
+namespace Authorization.ResponseForm
 {
     [Serializable]
-    public class AuthorizationSuccess : IResponse
+    public class AuthorizationTokens : IResponse
     {
         public JWTTokenResponse accessToken;
         public JWTTokenResponse refreshToken;

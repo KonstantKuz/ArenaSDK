@@ -4,11 +4,11 @@ using UnityEngine.Networking;
 namespace Response.Fail
 {
     [Serializable]
-    public class UnityFail : IFailResponse
+    public class UnityWebRequestFail : IFailResponse
     {
         public string message;
 
-        public static UnityFail CreateFromRequest(UnityWebRequest request)
+        public static UnityWebRequestFail CreateFromRequest(UnityWebRequest request)
         {
             return new() {message = request.error};
         }

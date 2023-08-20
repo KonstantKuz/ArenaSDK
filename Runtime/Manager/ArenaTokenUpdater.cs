@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Authorization;
-using Response;
+using Authorization.ResponseForm;
 using Response.Fail;
 using UnityEngine;
 
@@ -19,18 +19,14 @@ namespace Manager
             _failCallback = failCallback;
         }
 
-        public static ArenaTokenUpdater TryRunAutoUpdate(IResponse authorizationResponse, MonoBehaviour runner, Action<IFailResponse> failCallback)
+        public static ArenaTokenUpdater RunAutoUpdate(MonoBehaviour runner, Action<IFailResponse> failCallback)
         {
-            return new ArenaTokenUpdater(runner, failCallback)
-                .RunIfAuthorizationSuccess(authorizationResponse);
+            return new ArenaTokenUpdater(runner, failCallback).Run();
         }
 
-        private ArenaTokenUpdater RunIfAuthorizationSuccess(IResponse response)
+        private ArenaTokenUpdater Run()
         {
-            if (response is AuthorizationSuccess success)
-            {
-                _coroutine = _runner.StartCoroutine(AutoUpdateAccessToken());
-            }
+            _coroutine = _runner.StartCoroutine(AutoUpdateAccessToken());
             return this;
         }
 

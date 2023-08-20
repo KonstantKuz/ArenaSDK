@@ -1,4 +1,5 @@
 ﻿using Authorization;
+using Authorization.ResponseForm;
 using Response;
 using Response.Fail;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Samples.Scripts
         private void Awake()
         {
             _authorizationWindow.Confirm.onClick.AddListener(OnAuthorizationConfirm);
-            ArenaSDKManager.Instance.OnTokenUpdateFail += SignInAgain;
+            ArenaSDKManager.Instance.OnAccessTokenUpdateFailed += SignInAgain;
         }
 
         private void SignInAgain(IFailResponse response)
@@ -42,7 +43,7 @@ namespace Samples.Scripts
         {
             switch (response)
             {
-                case AuthorizationSuccess success:
+                case AuthorizationTokens success:
                     _messagePopup.Show("Authorization success!");
                     gameObject.SetActive(false);
                     _leaderBoardSample.gameObject.SetActive(true);
