@@ -14,7 +14,7 @@ If you need to get or update tokens manually you can use UpdateAccessTokenFuncti
 
 ArenaSDKManager is a singleton and you can access it using ArenaSDKManager.Instance property.
 
-### Registration
+- ####ArenaSDKManager.Instance.RegisterUser  
 To register new user use ArenaSDKManager.Instance.RegisterUser function.  
 After calling this function you have to handle callback which will contain IResponse object.  
 All possible unique IResponse object types are described in method info. All functions could return common fail responses such as UnityWebRequestFail or ServerFail.  
@@ -25,3 +25,24 @@ Also UserInfo will be automatically downloaded and cached every time when user p
 If registration process will fail IResponse object will be of type IFailResponse.  
 
 Samples of handling different responses are available in samples folder.
+
+- ####ArenaSDKManager.Instance.SendConfirmationCode
+After registration proccess confirmation code will be sent automatically. But you can request confirmation code again.
+
+- ####ArenaSDKManager.Instance.ConfirmEmail
+Use this function during registration process to validate code that was sent to user's email. 
+
+- ####ArenaSDKManager.Instance.AuthorizeUser
+Use this function to authorize user.
+
+- ####ArenaSDKManager.Instance.LoadUserInfo
+Manually load UserInfo
+
+- ####ArenaSDKManager.Instance.LoadLeaderBoard
+Load game's leaderboard using leaderboard alias.
+
+- ####ArenaSDKManager.Instance.UpdateUserStatistics
+Udpate user's scores on different leaderboards.
+
+- ####ArenaSDKManager.Instance.- ####ArenaSDKManager.Instance.
+Manually request access token
