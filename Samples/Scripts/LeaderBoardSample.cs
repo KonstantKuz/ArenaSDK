@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LeaderBoard.ResponseForm;
-using Request;
 using Response;
 using Response.Fail;
 using UnityEngine;
@@ -26,7 +25,7 @@ namespace Samples.Scripts
 
         private void LoadLeaderBoard()
         {
-            ArenaSDKManager.Instance.LoadLeaderBoard(_leaderboardAlias, LoadCallback, _leaderboardVersion, RequestTarget.server);
+            ArenaSDKManager.Instance.LoadLeaderBoard(_leaderboardAlias, LoadCallback, _leaderboardVersion);
         }
 
         private void LoadCallback(IResponse response)

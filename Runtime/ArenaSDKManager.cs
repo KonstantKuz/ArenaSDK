@@ -43,7 +43,7 @@ public class ArenaSDKManager : MonoBehaviour
         if (managers.Length == 0) throw new NullReferenceException("ArenaSDKManager not found.");
         if (managers.Length > 1) throw new Exception("There are more than one instances of ArenaSDKManager.");
         var instance = managers[0];
-        Assert.IsTrue(instance._gameAlias != null && !instance._gameAlias.Equals(string.Empty), "Game alias is empty.");
+        Assert.IsFalse(instance._gameAlias.IsNullOrEmpty(), "Game alias is empty.");
         GameData.ALIAS = instance._gameAlias;
         DontDestroyOnLoad(instance);
         return instance;
