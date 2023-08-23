@@ -6,6 +6,12 @@ using Util;
 
 namespace Request
 {
+    public enum RequestTarget
+    {
+        client,
+        server
+    }
+    
     public static class RequestExtension
     {
         public static byte[] ToBytes(this object value)
@@ -34,19 +40,17 @@ namespace Request
         public static bool TryGetFailResponse(this IRequest request, out IFailResponse fail)
         {
             fail = null;
+            var serverFail = JsonUtility.FromJson<ServerFail>(request.Body.downloadHandler.text);
+            if (serverFail.HasValue())
+            {
+                fail = serverFail;
+                return true;
+            }
             if (!request.Body.error.IsNullOrEmpty())
             {
                 fail = UnityWebRequestFail.CreateFromRequest(request.Body);
                 return true;
             }
-
-            var serverFail = JsonUtility.FromJson<ServerFail>(request.Body.downloadHandler.text);
-            if (!serverFail.IsEmpty())
-            {
-                fail = serverFail;
-                return true;
-            }
-            
             return false;
         }
     }

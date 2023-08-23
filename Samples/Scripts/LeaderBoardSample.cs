@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using LeaderBoard.ResponseForm;
+using Request;
 using Response;
 using Response.Fail;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Samples.Scripts
 {
     public class LeaderBoardSample : MonoBehaviour
     {
-        [SerializeField] private string _leaderboardAlias = "FIGHTER";
+        [SerializeField] private string _leaderboardAlias = "test-task";
+        [SerializeField] private string _leaderboardVersion = "1";
         [SerializeField] private LeaderBoardWindow _leaderBoardWindow;
         [SerializeField] private MessagePopup _messagePopup;
 
@@ -26,7 +26,7 @@ namespace Samples.Scripts
 
         private void LoadLeaderBoard()
         {
-            ArenaSDKManager.Instance.LoadLeaderBoard(_leaderboardAlias, LoadCallback);
+            ArenaSDKManager.Instance.LoadLeaderBoard(_leaderboardAlias, LoadCallback, _leaderboardVersion, RequestTarget.server);
         }
 
         private void LoadCallback(IResponse response)

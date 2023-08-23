@@ -27,7 +27,7 @@ public class ArenaSDKManager : MonoBehaviour
     public static ArenaSDKManager Instance => _instance ??= Init();
 
     [CanBeNull]
-    public static UserInfo UserInfo => Instance._userRepository.Info;
+    public static UserInfo UserInfo => Instance.GetUserInfo();
     public static AuthorizationTokens Tokens => ArenaTokenRepository.LoadTokens();
     
     public event Action<IFailResponse> OnAccessTokenUpdateFailed;
@@ -111,16 +111,29 @@ public class ArenaSDKManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Load leaderboards
+    /// Load leaderboards - client request version
     /// </summary>
-    /// <param name="leaderboardAlias"></param>
+    /// <param name="requestTarget">API target. Access token used when target is client. Server token used when target is server.</param>
     /// <param name="limit">The maximum number of items to be returned in a single response. For instance, if the limit is set to 10, then the API will return the first 10 items that match the query.</param>
     /// <param name="offset">Indicates where to start fetching the data. For example, if the offset is set to 20, then the API will skip the first 20 items that match the query and start fetching from the 21st item.</param>
-    /// <param name="callback">Possible responses : LeaderBoards (success), InvalidFormFail (invalid parameters provided), UnityWebRequestFail, ServerFail</param>
-    public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback, int limit = 10, int offset = 0)
+    /// <param name="callback">Possible responses : LeaderBoards (success), UserInfoLoadFail, InvalidFormFail (invalid parameters provided), UnityWebRequestFail, ServerFail</param>
+    public void LoadLeaderBoard(string leaderboardAlias, Action<IResponse> callback, string leaderboardVersion = null,
+        RequestTarget requestTarget = RequestTarget.client, int limit = 10, int offset = 0, int aroundPlayerLimit = 10, bool isAroundPlayer = true)
     {
-        var token = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
-        var request = new GetLeaderBoardRequest(leaderboardAlias, token, limit, offset);
+        if (UserInfo == null)
+        {
+            callback?.Invoke(new UserInfoLoadFail());
+            return;
+        }
+        
+        var accessToken = ArenaTokenRepository.LoadToken(TokenType.AccessToken).token;
+        var tokenType = leaderboardVersion.IsNullOrEmpty() ? TokenType.AccessToken : TokenType.ServerToken;
+        var token = leaderboardVersion.IsNullOrEmpty() ? accessToken : _serverToken;
+        var request = new GetLeaderBoardRequestBuilder(leaderboardAlias, UserInfo.id)
+            .SetAccessToken(tokenType, token)
+            .SetVersion(leaderboardVersion)
+            .SetRequestTarget(requestTarget)
+            .Build(limit, offset, aroundPlayerLimit, isAroundPlayer);
         StartCoroutine(SendRequest(request, callback));
     }
 
@@ -136,7 +149,7 @@ public class ArenaSDKManager : MonoBehaviour
             return;
         }
 
-        var request = new PatchLeaderBoardRequest(leaderboardAlias, _serverToken, UserInfo.id, value);
+        var request = new PatchLeaderBoardRequest(leaderboardAlias, _serverToken, UserInfo?.id, value);
         StartCoroutine(SendRequest(request, callback));
     }
 
@@ -155,6 +168,17 @@ public class ArenaSDKManager : MonoBehaviour
             ArenaTokenRepository.SaveToken(TokenType.AccessToken, success.accessToken);
         };
         StartCoroutine(SendRequest(request, onResponseReceived));
+    }
+
+    private UserInfo GetUserInfo()
+    {
+        if (_userRepository == null || _userRepository.Info == null)
+        {
+            Debug.LogWarning("UserInfo is not loaded. Try sign in again.");
+            return null;
+        }
+
+        return _userRepository.Info;
     }
 
     private void OnAuthorizationResponse(IResponse response)

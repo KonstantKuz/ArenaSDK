@@ -3,6 +3,7 @@ using LeaderBoard.RequestForm;
 using Request;
 using Response;
 using UnityEngine.Networking;
+using Util;
 
 namespace LeaderBoard
 {
@@ -32,7 +33,7 @@ namespace LeaderBoard
             })
             {
                 Body.SetRequestHeader("Content-Type", "application/json");
-                Body.SetRequestHeader("x-auth-server", _serverToken);
+                Body.SetRequestHeader(TokenHeader.SERVER_TOKEN, _serverToken);
                 yield return Body.SendWebRequest();
                 Result = this.GetResponse<OperationSuccess>();
             }

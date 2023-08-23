@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using LeaderBoard.RequestForm;
 using LeaderBoard.ResponseForm;
+using Manager;
 using Request;
 using UnityEngine.Networking;
 
@@ -8,29 +9,25 @@ namespace LeaderBoard
 {
     public class GetLeaderBoardRequest : IRequest
     {
-        private string _leaderboardAlias;
-        private string _accessToken;
-        
-        private GetLeaderboardForm _getLeaderboardForm;
+        public readonly string _leaderboardAlias;
+
+        public string _profileId;
+        public string _leaderboardVersion;
+        public string _requestUrl;
+        public RequestTarget _requestTarget;
+        public TokenType _tokenType;
+        public string _token;
+        public string _header;
+        public GetLeaderboardForm _getLeaderboardForm;
         
         public UnityWebRequest Body { get; private set; }
         public object Result { get; private set;  }
-
-        public GetLeaderBoardRequest(string leaderboardAlias, string accessToken,
-            int limit = 10, int offset = 0,
-            int aroundPlayerLimit = 10, bool isAroundPlayer = true)
+        
+        public GetLeaderBoardRequest(string leaderboardAlias)
         {
             _leaderboardAlias = leaderboardAlias;
-            _accessToken = accessToken;
-            _getLeaderboardForm = new GetLeaderboardForm
-            {
-                limit = limit.ToString(),
-                offset = offset.ToString(), 
-                aroundPlayerLimit = aroundPlayerLimit.ToString(),
-                isAroundPlayer = isAroundPlayer.ToString(),
-            };
         }
-        
+
         public IEnumerator Send()
         {
             if (!this.IsFormValid(_getLeaderboardForm, out var fail))
@@ -39,13 +36,14 @@ namespace LeaderBoard
                 yield break;
             }
 
-            using (Body = new UnityWebRequest(API.GET_LEADERBOARD(_leaderboardAlias), RequestMethod.GET)
+            using (Body = new UnityWebRequest(_requestUrl, RequestMethod.GET)
             {
+                uploadHandler = new UploadHandlerRaw(_getLeaderboardForm.ToBytes()),
                 downloadHandler = new DownloadHandlerBuffer()
             })
             {
                 Body.SetRequestHeader("Content-Type", "application/json");
-                Body.SetRequestHeader("access-token", _accessToken);
+                Body.SetRequestHeader(_header, _token);
                 yield return Body.SendWebRequest();
                 Result = this.GetResponse<LeaderBoards>();
             }

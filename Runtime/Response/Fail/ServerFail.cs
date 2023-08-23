@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Util;
 
 namespace Response.Fail
@@ -10,12 +11,21 @@ namespace Response.Fail
         public string code;
         public string type;
         public string message;
+        public string[] @params;
         
-        public string Message => $"Server fail: id = {id}, code = {code}, type = {type}, message = {message}";
+        public string Message => CreateMessage();
 
-        public bool IsEmpty()
+        private string CreateMessage()
         {
-            return id.IsNullOrEmpty() || code.IsNullOrEmpty() || type.IsNullOrEmpty() || message.IsNullOrEmpty();
+            var builder = new StringBuilder($"Server failed : {message}");
+            if (@params == null) return builder.ToString();
+            foreach (var value in @params) builder.Append($"\n {value}");
+            return builder.ToString();
+        }
+        
+        public bool HasValue()
+        {
+            return !type.IsNullOrEmpty() && type.Contains("error");
         }
     }
 }

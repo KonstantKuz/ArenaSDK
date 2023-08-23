@@ -1,4 +1,6 @@
-﻿public class API
+﻿using Request;
+
+public class API
 {
     public static readonly string USER_REGISTRATION = $"https://api.arenavs.com/api/v2/gamedev/client/{GameData.ALIAS}/user-registration";
     public static readonly string EMAIL_VERIFICATION = $"https://api.arenavs.com/api/v2/gamedev/client/{GameData.ALIAS}/user-registration/confirmation-email";
@@ -8,6 +10,8 @@
     public static readonly string GET_PROFILE = "https://api.arenavs.com/api/v2/gamedev/client/my-profile";
     public static string GET_LEADERBOARD(string leaderboardAlias) 
         => $"https://api.arenavs.com/api/v2/gamedev/client/{GameData.ALIAS}/leaderboard/{leaderboardAlias}";
+    public static string GET_LEADERBOARD_VERSION_FILTER(string leaderboardAlias, string version, RequestTarget target) 
+        => $"https://api.arenavs.com/api/v2/gamedev/{target}/{GameData.ALIAS}/leaderboard/{leaderboardAlias}/{version}";
     public static string PATCH_LEADERBOARD(string leaderboardAlias) =>
         $"https://api.arenavs.com/api/v2/gamedev/server/{GameData.ALIAS}/leaderboard/{leaderboardAlias}/score";
 }

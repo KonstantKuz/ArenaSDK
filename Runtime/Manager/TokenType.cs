@@ -4,5 +4,6 @@
     {
         AccessToken,
         RefreshToken,
+        ServerToken,
     }
 }

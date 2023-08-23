@@ -11,6 +11,7 @@ namespace LeaderBoard.RequestForm
         public string isAroundPlayer;
         public string limit;
         public string offset;
+        public string profileId;
 
         public bool IsValid(out string description)
         {
